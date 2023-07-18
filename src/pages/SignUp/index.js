@@ -1,18 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { Platform} from 'react-native';
+
+import {Background, Container, AreaInput, SubmitButton, SubmitText, Input} from '../SignIn/styles';
 
 
 export default function SignUP() {
     return (
 
-        <View style={styles.container}>
-            <Text>Tela cadastro</Text>
-        </View>
+        <Background>
+            <Container  behavior={Platform.OS === 'ios' ? 'padding' : ''} enabled>
+                <AreaInput>
+                    <Input 
+                    placeholder='Nome'
+                    />
+                </AreaInput>
+                <AreaInput>
+                <Input 
+                    placeholder='Email'
+                    />
+                </AreaInput>
+                <AreaInput>
+                <Input 
+                    placeholder='Senha'
+                    />
+                </AreaInput>
+                <SubmitButton>
+                    <SubmitText>Cadastrar</SubmitText>
+                </SubmitButton>
+            </Container>
+        </Background>
+       
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-})
