@@ -1,14 +1,21 @@
-import React from 'react';
-import { Platform } from 'react-native';
-
+import React, {useState, useContext} from 'react';
+import { Platform, ActivityIndicator } from 'react-native';
+import {AuthContext}from  '../../contexts/auth';
 import {Background, Container, Logo, AreaInput, Input, SubmitButton, SubmitText, Link, LinkText} from './styles';
 import {useNavigation} from '@react-navigation/native'
 export default function SignIn() {
     
     
     const navigation = useNavigation();
-    
-    
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const {SignIn, loadingAuth} = useContext(AuthContext);
+   
+    function handleLogin(){
+        SignIn(email, password);
+    }
+
+
     return (
        <Background>
         {/* Behavior ativa a funcção onde quando o teclado é ativado ele não esconde a aplicação no IOS
@@ -23,6 +30,8 @@ export default function SignIn() {
             <AreaInput>
                     <Input
                     placeholder='Email'
+                    value={email}
+                    onChangeText={(texto)=> setEmail(texto)}
                     
                     />
                 
@@ -32,10 +41,17 @@ export default function SignIn() {
                     <Input
                     placeholder='Senha'
                     secureTextEntry={true}
+                    value={password}
+                    onChangeText={(texto)=> setPassword(texto)}
                     />
             </AreaInput>
-            <SubmitButton activeOpacity={0.8}>
-                <SubmitText>Acessar</SubmitText>
+            <SubmitButton activeOpacity={0.8} onPress={handleLogin}>
+                {loadingAuth ? (
+                
+                <ActivityIndicator size={20} color="#FFF"/>
+                
+                ) :  (<SubmitText>Acessar</SubmitText>) }
+               
             </SubmitButton>
             <Link onPress={()=> navigation.navigate('SignUp')} >
                 <LinkText>Criar uma Conta</LinkText>

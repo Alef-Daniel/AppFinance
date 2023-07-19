@@ -1,16 +1,21 @@
 import React, {useContext, useState} from 'react';
-import { Platform} from 'react-native';
+import { Platform, ActivityIndicator} from 'react-native';
 import { AuthContext } from '../../contexts/auth'
 
 import {Background, Container, AreaInput, SubmitButton, SubmitText, Input} from '../SignIn/styles';
 
 export default function SignUp() {
-    const {signUp}= useContext(AuthContext)
+    const {signUp, loadingAuth}= useContext(AuthContext)
     const[nome, setNome] = useState('');
     const[email, setEmail] = useState('');
     const[password, setPassword] = useState('');
     
     function handleSignUp(){
+        if(nome === '' || password === '' ||  email === '' ) {
+            alert("Todos os campos são obrigatórios!")
+            return;
+        }
+
         signUp(email, password, nome);
     }
     return (
@@ -39,7 +44,9 @@ export default function SignUp() {
                     />
                 </AreaInput>
                 <SubmitButton>
-                    <SubmitText onPress={handleSignUp}>Cadastrar</SubmitText>
+                    {loadingAuth ? (
+                        <ActivityIndicator size={20} color="#FFF" />
+                    ): (<SubmitText onPress={handleSignUp}>Cadastrar</SubmitText>)}
                 </SubmitButton>
             </Container>
         </Background>
