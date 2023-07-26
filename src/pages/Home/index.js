@@ -1,17 +1,79 @@
-import React, {useContext} from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {TouchableOpacity } from 'react-native';
 import { AuthContext } from '../../contexts/auth';
+import Header from '../../components/Header';
+import {Background, ListBalance, Area, Title, List} from './style'
+import api from  '../../services/api'
+import {format} from 'date-fns'
+import BalanceItem from '../../components/BalanceItem';
+import {useIsFocused} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import HistoryList from '../../components/HistoryList';
 
 export default function App() {
+    const isFocused = useIsFocused();
+    const [listBalance, setListBalance] = useState([]);
+    const [dateMovement, setDateMovement] = useState(new Date());
+    const[movements, setMovements]= useState([])
 
-const{signOut, user} = useContext(AuthContext);
+    useEffect(()=>{
+
+        let isActive = true;
+
+        async function getMovements(){
+            let dateFormated = format(dateMovement, 'dd/MM/yyyy')
+
+            const receives = await api.get('/receives', {
+                params:{
+                    date: dateFormated
+                }
+            })
+
+
+            const balance = await api.get('/balance', {
+                params:{
+                    date: dateFormated
+                }
+            })
+            if(isActive){
+                setMovements(receives.data)
+                setListBalance(balance.data);
+            }
+        }
+
+        getMovements();
+        return ()=> isActive=false;
+
+    },[isFocused])
+
+
+
 
     return (
 
-        <View>
-            <Text>Tela Home</Text>
-            <Text>nome: {user.name}</Text>
-            <Button title='Sair da Conta' onPress={()=> signOut()}></Button>
-        </View>
+        <Background>
+            <Header title="Minhas Movimentações" ></Header>
+            <ListBalance
+            data={listBalance}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={item => item.tag}
+            renderItem={({item}) => (<BalanceItem data={item}/>)}
+            />
+            <Area>
+                <TouchableOpacity>
+                    <Icon name="event" color="#121212" size={30}/>
+                </TouchableOpacity>
+                <Title>Ultimas movimentações</Title>
+            </Area>
+            <List
+                data={movements}
+                keyExtractor={item => item.id}
+                renderItem={({item})=> <HistoryList data={item}/>}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{paddingBottom: 20}}
+            />
+        </Background>
+        
     );
 }
