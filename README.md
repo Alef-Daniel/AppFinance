@@ -32,7 +32,11 @@ Rotas de navegação.
 
 ## Demonstração
 
-https://github.com/Alef-Daniel/demos/blob/master/20230606_034349.mp4
+
+
+https://github.com/Alef-Daniel/AppFinance/assets/83924026/8d220531-cebd-4e75-a096-072600f44773
+
+
 ## Funcionalidades
 
 Registrar finanças pessoais de usuário, ele pode fazer um registro de receita ou despesa.
@@ -44,3 +48,4 @@ na home do aplicativo o usuário consegue visaulizar o Saldo Atual, Entradas do 
 
 ## API utilizada
 
+![image](https://github.com/Alef-Daniel/AppFinance/assets/83924026/a31fb60e-17d6-43c1-86da-bfae985ca7b2)
