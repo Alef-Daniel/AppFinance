@@ -3,6 +3,8 @@ import {View, Text, StyleSheet} from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from   '../pages/Home'
 import New from '../pages/New';
+import Profile from '../pages/Profile';
+import CustomDrawer from '../components/CustomDrawer';
 
 
     const appDrawer = createDrawerNavigator();
@@ -10,7 +12,7 @@ import New from '../pages/New';
     function AppRoutes(){
         return (
             <appDrawer.Navigator 
-            
+            drawerContent={(props)=><CustomDrawer {...props}/>}
             screenOptions={{
                 headerShown: false,
                 
@@ -28,6 +30,7 @@ import New from '../pages/New';
             >
                 <appDrawer.Screen name="Home" component={Home}/>
                 <appDrawer.Screen name="Registar" component={New}/>
+                <appDrawer.Screen name="Meu perfil" component={Profile}/>
             </appDrawer.Navigator>
         )
     }

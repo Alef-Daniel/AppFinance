@@ -44,9 +44,20 @@ export default function App() {
         getMovements();
         return ()=> isActive=false;
 
-    },[isFocused])
+    },[isFocused, dateMovement])
 
-
+   async function handleDelete(id){
+        try{
+            await api.delete('/receives/delete',{
+                params:{
+                    item_id: id
+                }
+            })
+            setDateMovement(new Date());
+        }catch(err){
+            console.log(err);
+        }
+   }     
 
 
     return (
@@ -69,7 +80,7 @@ export default function App() {
             <List
                 data={movements}
                 keyExtractor={item => item.id}
-                renderItem={({item})=> <HistoryList data={item}/>}
+                renderItem={({item})=> <HistoryList data={item} deleteItem={handleDelete}/>}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingBottom: 20}}
             />
