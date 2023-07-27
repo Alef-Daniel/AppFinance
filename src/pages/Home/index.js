@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {TouchableOpacity } from 'react-native';
+import {TouchableOpacity, Modal } from 'react-native';
 import { AuthContext } from '../../contexts/auth';
 import Header from '../../components/Header';
 import {Background, ListBalance, Area, Title, List} from './style'
@@ -9,19 +9,24 @@ import BalanceItem from '../../components/BalanceItem';
 import {useIsFocused} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import HistoryList from '../../components/HistoryList';
+import CalendarModal from '../../components/CalendarModal';
 
-export default function App() {
+export default function Home() {
     const isFocused = useIsFocused();
     const [listBalance, setListBalance] = useState([]);
     const [dateMovement, setDateMovement] = useState(new Date());
-    const[movements, setMovements]= useState([])
+    const[movements, setMovements]= useState([]);
+    const[modalVisible, setModalVisible] = useState(false);
 
     useEffect(()=>{
 
         let isActive = true;
 
         async function getMovements(){
-            let dateFormated = format(dateMovement, 'dd/MM/yyyy')
+            
+            let date = new Date(dateMovement)
+            let onlyDate = date.valueOf()+date.getTimezoneOffset()*60*1000;
+            let dateFormated = format(onlyDate, 'dd/MM/yyyy')
 
             const receives = await api.get('/receives', {
                 params:{
@@ -60,6 +65,10 @@ export default function App() {
    }     
 
 
+   function filterDateMovements(dateSelected){
+    setDateMovement(dateSelected);
+   }    
+
     return (
 
         <Background>
@@ -72,7 +81,7 @@ export default function App() {
             renderItem={({item}) => (<BalanceItem data={item}/>)}
             />
             <Area>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={()=>setModalVisible(true)}>
                     <Icon name="event" color="#121212" size={30}/>
                 </TouchableOpacity>
                 <Title>Ultimas movimentações</Title>
@@ -84,6 +93,16 @@ export default function App() {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingBottom: 20}}
             />
+
+        <Modal visible={modalVisible} animationType='fade' transparent={true}>
+            <CalendarModal setVisible={()=> setModalVisible(false)}
+                handleFilter={filterDateMovements}
+            />
+        </Modal>
+
+        
+
+
         </Background>
         
     );
